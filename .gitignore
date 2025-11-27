@@ -1,0 +1,6 @@
+z_test/
+node_modules/
+client/dist/
+server/internal/db/sqlc/
+.env
+server/bin/
