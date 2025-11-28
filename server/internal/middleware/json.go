@@ -28,8 +28,3 @@ func GetRegistrationFromCtx(c *fiber.Ctx) *models.RegistrationRequest {
 	req, _ := val.(*models.RegistrationRequest)
 	return req
 }
-
-
-
-
-

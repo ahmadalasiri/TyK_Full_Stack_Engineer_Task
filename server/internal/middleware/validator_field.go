@@ -55,8 +55,3 @@ func FieldValidator() RegistrationValidator {
 		return nil
 	}
 }
-
-
-
-
-

@@ -27,8 +27,3 @@ func CrossFieldValidator() RegistrationValidator {
 		return nil
 	}
 }
-
-
-
-
-

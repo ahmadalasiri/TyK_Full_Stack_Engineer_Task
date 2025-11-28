@@ -30,6 +30,11 @@ SELECT EXISTS(
     SELECT 1 FROM users WHERE username = $1
 );
 
+-- name: CheckPhoneExists :one
+SELECT EXISTS(
+    SELECT 1 FROM users WHERE phone = $1 AND phone IS NOT NULL
+);
+
 -- name: HealthCheck :one
 SELECT 1;
 

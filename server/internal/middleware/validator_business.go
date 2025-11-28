@@ -27,6 +27,15 @@ func BusinessValidator(repo repositories.UserRepository) RegistrationValidator {
 			fields["username"] = "Username is already taken"
 		}
 
+		// Check phone availability only if phone is provided (it's optional)
+		if req.Phone != nil && *req.Phone != "" {
+			if exists, err := repo.PhoneExists(ctx, *req.Phone); err != nil {
+				return response.NewInternalError("failed to validate phone uniqueness")
+			} else if exists {
+				fields["phone"] = "Phone number is already registered"
+			}
+		}
+
 		if len(fields) > 0 {
 			return response.NewBusinessError("Business validation failed", fields)
 		}

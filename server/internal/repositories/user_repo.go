@@ -13,6 +13,7 @@ import (
 type UserRepository interface {
 	EmailExists(ctx context.Context, email string) (bool, error)
 	UsernameExists(ctx context.Context, username string) (bool, error)
+	PhoneExists(ctx context.Context, phone string) (bool, error)
 	CreateUser(ctx context.Context, req *models.RegistrationRequest, passwordHash string) (uuid.UUID, error)
 }
 
@@ -36,6 +37,18 @@ func (r *userRepository) EmailExists(ctx context.Context, email string) (bool, e
 
 func (r *userRepository) UsernameExists(ctx context.Context, username string) (bool, error) {
 	exists, err := r.q.CheckUsernameExists(ctx, username)
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
+}
+
+func (r *userRepository) PhoneExists(ctx context.Context, phone string) (bool, error) {
+	phoneText := pgtype.Text{
+		String: phone,
+		Valid:  true,
+	}
+	exists, err := r.q.CheckPhoneExists(ctx, phoneText)
 	if err != nil {
 		return false, err
 	}

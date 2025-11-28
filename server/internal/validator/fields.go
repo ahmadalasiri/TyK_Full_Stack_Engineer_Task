@@ -54,8 +54,3 @@ func CountryEmailDomainValid(country, email string) bool {
 	}
 	return true
 }
-
-
-
-
-
