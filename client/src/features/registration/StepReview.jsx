@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useRegistration } from "../../hooks/useRegistration.js";
-import { registerUser } from "../../http/requests.js";
+import { registerUser } from "../../api/registration.js";
 import { Button } from "../../components/ui/button.jsx";
 import {
   Card,

@@ -16,7 +16,7 @@ import {
   XCircle,
   Loader2,
 } from "lucide-react";
-import { checkUsernameAvailability } from "../../http/requests.js";
+import { checkUsernameAvailability } from "../../api/registration.js";
 
 export function StepAccount() {
   const {
@@ -57,7 +57,7 @@ export function StepAccount() {
     try {
       const result = await checkUsernameAvailability(usernameValue);
       setUsernameAvailable(result.available);
-    } catch (error) {
+    } catch {
       setUsernameAvailable(null);
     } finally {
       setIsCheckingUsername(false);
