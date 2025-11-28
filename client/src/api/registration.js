@@ -1,9 +1,10 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 async function handleResponse(response) {
   const data = await response.json().catch(() => null);
   if (!response.ok) {
-    const error = data && data.error ? data.error : { message: "Request failed" };
+    const error =
+      data && data.error ? data.error : { message: "Request failed" };
     const err = new Error(error.message || "Request failed");
     err.code = error.code;
     err.fieldErrors = error.field_errors || error.fieldErrors || {};
@@ -17,7 +18,9 @@ export async function checkUsernameAvailability(username) {
     return { username, available: false };
   }
   const res = await fetch(
-    `${API_BASE}/api/username-availability?username=${encodeURIComponent(username)}`,
+    `${API_BASE}/api/username-availability?username=${encodeURIComponent(
+      username
+    )}`
   );
   return handleResponse(res);
 }
@@ -32,5 +35,3 @@ export async function registerUser(payload) {
   });
   return handleResponse(res);
 }
-
-

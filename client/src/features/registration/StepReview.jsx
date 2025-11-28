@@ -9,15 +9,23 @@ import {
   CardTitle,
 } from "../../components/ui/card.jsx";
 import { Separator } from "../../components/ui/separator.jsx";
-import { ChevronLeft, Edit, CheckCircle, Loader2 } from "lucide-react";
+import {
+  ChevronLeft,
+  Edit,
+  CheckCircle,
+  Loader2,
+  AlertCircle,
+} from "lucide-react";
 
 export function StepReview() {
   const { registrationData, setCurrentStep, resetForm } = useRegistration();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setError(null); // Clear previous errors
 
     try {
       const payload = {
@@ -29,6 +37,7 @@ export function StepReview() {
         city: registrationData.address.city,
         state: registrationData.address.state,
         country: registrationData.address.country,
+        country_iso: registrationData.address.countryIso, // Country ISO code (e.g., "EG", "UK", "US") for validation
         username: registrationData.account.username,
         password: registrationData.account.password,
         confirm_password: registrationData.account.confirmPassword,
@@ -43,9 +52,35 @@ export function StepReview() {
       setTimeout(() => {
         resetForm();
       }, 2000);
-    } catch (error) {
-      // Error handling is done in the registerUser function
-      console.error("Registration error:", error);
+    } catch (err) {
+      console.error("Registration error:", err);
+
+      // Set error state with message and field errors
+      const errorMessage =
+        err.message ||
+        "Registration failed. Please check your information and try again.";
+      const fieldErrors = err.fieldErrors || {};
+
+      setError({
+        message: errorMessage,
+        fieldErrors: fieldErrors,
+      });
+
+      // Navigate to the relevant step if there's a field error
+      if (fieldErrors.email) {
+        // Email error - go to personal info step
+        setTimeout(() => setCurrentStep(1), 500);
+      } else if (fieldErrors.country || fieldErrors.country_iso) {
+        // Country/address error - go to address step
+        setTimeout(() => setCurrentStep(2), 500);
+      } else if (
+        fieldErrors.username ||
+        fieldErrors.password ||
+        fieldErrors.confirm_password
+      ) {
+        // Account error - go to account step
+        setTimeout(() => setCurrentStep(3), 500);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -69,6 +104,35 @@ export function StepReview() {
 
   return (
     <div className="space-y-6">
+      {error && (
+        <Card className="border-destructive bg-destructive/10">
+          <CardContent className="pt-6">
+            <div className="flex items-start space-x-3">
+              <AlertCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
+              <div className="flex-1 space-y-2">
+                <p className="text-sm font-medium text-destructive">
+                  {error.message}
+                </p>
+                {error.fieldErrors &&
+                  Object.keys(error.fieldErrors).length > 0 && (
+                    <ul className="list-disc list-inside space-y-1 text-sm text-destructive/90">
+                      {Object.entries(error.fieldErrors).map(
+                        ([field, message]) => (
+                          <li key={field}>
+                            <span className="font-medium capitalize">
+                              {field.replace(/_/g, " ")}:
+                            </span>{" "}
+                            {message}
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Personal Information</CardTitle>

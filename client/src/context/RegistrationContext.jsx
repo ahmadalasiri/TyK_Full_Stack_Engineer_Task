@@ -13,6 +13,7 @@ const initialData = {
     city: "",
     state: "",
     country: "",
+    countryIso: "", // Country ISO code (e.g., "EG", "UK", "US") - not saved to DB, used for validation
   },
   account: {
     username: "",

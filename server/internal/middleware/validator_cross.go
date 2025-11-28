@@ -16,8 +16,8 @@ func CrossFieldValidator() RegistrationValidator {
 			fields["confirm_password"] = "Passwords must match"
 		}
 
-		if !validator.CountryEmailDomainValid(req.Country, req.Email) {
-			fields["email"] = "For UK, email must include .uk domain"
+		if !validator.CountryEmailDomainValid(req.CountryISO, req.Email) {
+			fields["email"] = "Email domain must match the selected country's domain"
 		}
 
 		if len(fields) > 0 {

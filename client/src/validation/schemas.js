@@ -18,7 +18,7 @@ export const personalInfoSchema = z.object({
     .optional()
     .refine(
       (val) => !val || /^[\d\s\-\+\(\)]+$/.test(val),
-      "Please enter a valid phone number",
+      "Please enter a valid phone number"
     ),
 });
 
@@ -35,6 +35,7 @@ export const addressInfoSchema = z.object({
     .max(100, "City name is too long"),
   state: z.string().min(1, "Please select a state"),
   country: z.string().min(1, "Please select a country"),
+  countryIso: z.string().optional(), // Country ISO code (e.g., "EG", "UK", "US") - auto-set when country is selected
 });
 
 export const accountInfoSchema = z
@@ -46,7 +47,7 @@ export const accountInfoSchema = z
       .max(30, "Username must be less than 30 characters")
       .regex(
         /^[a-zA-Z0-9_]+$/,
-        "Username can only contain letters, numbers, and underscores",
+        "Username can only contain letters, numbers, and underscores"
       ),
     password: z
       .string()
@@ -56,12 +57,15 @@ export const accountInfoSchema = z
       .regex(/[0-9]/, "Password must contain at least one number")
       .regex(
         /[^A-Za-z0-9]/,
-        "Password must contain at least one special character",
+        "Password must contain at least one special character"
       ),
     confirmPassword: z.string(),
     agreeToTerms: z
       .boolean()
-      .refine((val) => val === true, "You must agree to the terms and conditions"),
+      .refine(
+        (val) => val === true,
+        "You must agree to the terms and conditions"
+      ),
     subscribeNewsletter: z.boolean(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -79,5 +83,3 @@ export const validateEmailDomain = (email, country) => {
   if (!expected || !email) return true;
   return expected.some((domain) => email.toLowerCase().includes(domain));
 };
-
-

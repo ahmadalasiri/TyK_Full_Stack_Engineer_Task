@@ -24,7 +24,6 @@ func FieldValidator() RegistrationValidator {
 			fields["email"] = "Invalid email address"
 		}
 		if req.Phone != nil && *req.Phone != "" {
-			// Validate phone number - country code must be in the phone number (e.g., +20, +1)
 			if !validator.ValidatePhone(*req.Phone) {
 				fields["phone"] = "Invalid phone number"
 			}

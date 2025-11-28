@@ -1,10 +1,7 @@
 import React, { useMemo, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  addressInfoSchema,
-  validateEmailDomain,
-} from "../../validation/schemas.js";
+import { addressInfoSchema } from "../../validation/schemas.js";
 import { useRegistration } from "../../hooks/useRegistration.js";
 import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
@@ -29,30 +26,25 @@ export function StepAddress() {
 
   const [selectedCountryCode, setSelectedCountryCode] = useState("");
 
-  const countries = useMemo(() => Country.getAllCountries(), []);
+  // Get all countries from country-state-city
+  const countries = useMemo(() => {
+    return Country.getAllCountries().map((country) => ({
+      name: country.name,
+      isoCode: country.isoCode,
+    }));
+  }, []);
+
+  // Get states for selected country using country-state-city
   const states = useMemo(() => {
     if (!selectedCountryCode) return [];
     return State.getStatesOfCountry(selectedCountryCode);
   }, [selectedCountryCode]);
-
-  useEffect(() => {
-    if (registrationData.address.country) {
-      const country = countries.find(
-        (c) => c.name === registrationData.address.country
-      );
-      if (country) {
-        setSelectedCountryCode(country.isoCode);
-      }
-    }
-  }, [registrationData.address.country, countries]);
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    setError,
-    clearErrors,
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
@@ -60,18 +52,39 @@ export function StepAddress() {
     defaultValues: registrationData.address,
   });
 
+  useEffect(() => {
+    if (registrationData.address.country) {
+      const countryData = countries.find(
+        (c) => c.name === registrationData.address.country
+      );
+      if (countryData) {
+        const countryCode = countryData.isoCode;
+        setSelectedCountryCode(countryCode);
+        // Set countryIso in form if not already set
+        if (!registrationData.address.countryIso) {
+          setValue("countryIso", countryCode, {
+            shouldValidate: false,
+          });
+        }
+      }
+    }
+  }, [
+    registrationData.address.country,
+    registrationData.address.countryIso,
+    countries,
+    setValue,
+  ]);
+
   const country = watch("country") || registrationData.address.country;
 
   const onSubmit = (data) => {
-    const email = registrationData.personal.email;
-    if (!validateEmailDomain(email, data.country)) {
-      setError("country", {
-        type: "manual",
-        message: "For UK, email should include a .uk domain",
-      });
-      return;
+    // Ensure countryIso is set if country is selected
+    if (data.country && !data.countryIso) {
+      const countryData = countries.find((c) => c.name === data.country);
+      if (countryData) {
+        data.countryIso = countryData.isoCode;
+      }
     }
-    clearErrors("country");
 
     updateAddressInfo(data);
     markStepComplete(2);
@@ -82,6 +95,8 @@ export function StepAddress() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {/* Hidden field to ensure countryIso is always included in form data */}
+      <input type="hidden" {...register("countryIso")} />
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="streetAddress" className="text-sm font-medium">
@@ -132,8 +147,12 @@ export function StepAddress() {
               value={country}
               onValueChange={(value) => {
                 const selectedCountry = countries.find((c) => c.name === value);
+                const countryCode = selectedCountry?.isoCode || "";
                 setValue("country", value, { shouldValidate: true });
-                setSelectedCountryCode(selectedCountry?.isoCode || "");
+                setValue("countryIso", countryCode, {
+                  shouldValidate: false,
+                });
+                setSelectedCountryCode(countryCode);
                 setValue("state", "", { shouldValidate: true });
               }}
             >

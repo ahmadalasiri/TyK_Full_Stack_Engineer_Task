@@ -54,9 +54,39 @@ func ValidatePassword(password string) bool {
 	return hasUpper && hasLower && hasDigit && hasSpecial
 }
 
-func CountryEmailDomainValid(country, email string) bool {
-	if strings.EqualFold(country, "uk") || strings.EqualFold(country, "united kingdom") {
-		return strings.Contains(strings.ToLower(email), ".uk")
+// isoToTldExceptions maps ISO country codes to TLDs where ISO code does NOT equal TLD
+// For most countries, TLD = "." + lowercase(ISO code), so they don't need to be in this map
+// Only exceptions are listed here (e.g., GB -> .uk because ISO "GB" != TLD ".uk")
+var isoToTldExceptions = map[string]string{
+	"GB": ".uk",
+}
+
+// CountryEmailDomainValid validates that the email domain matches the country's TLD
+// ISO code is received from the frontend (e.g., "EG", "GB", "US")
+// The function generates TLD from ISO code (e.g., "EG" -> ".eg", "US" -> ".us")
+// Special cases where ISO ≠ TLD are handled via isoToTldExceptions map (e.g., "GB" -> ".uk")
+func CountryEmailDomainValid(isoCode, email string) bool {
+	isoCode = strings.ToUpper(strings.TrimSpace(isoCode))
+	email = strings.ToLower(strings.TrimSpace(email))
+
+	if email == "" || isoCode == "" {
+		return false
 	}
-	return true
+
+	// Get TLD: check exceptions first, otherwise generate from ISO code
+	var tld string
+	if exceptionTld, exists := isoToTldExceptions[isoCode]; exists {
+		tld = exceptionTld
+	} else {
+		// For most countries, TLD = "." + lowercase(ISO code)
+		tld = "." + strings.ToLower(isoCode)
+	}
+
+	// Ensure TLD starts with a dot
+	if !strings.HasPrefix(tld, ".") {
+		tld = "." + tld
+	}
+
+	// Check if email ends with the country's TLD
+	return strings.HasSuffix(email, strings.ToLower(tld))
 }

@@ -8,7 +8,8 @@ type RegistrationRequest struct {
 	Street          string  `json:"street"`
 	City            string  `json:"city"`
 	State           string  `json:"state"`
-	Country         string  `json:"country"`
+	Country         string  `json:"country"`     // Country name (saved to DB)
+	CountryISO      string  `json:"country_iso"` // Country ISO code (e.g., "EG", "UK", "US") - NOT saved to DB, used for validation only
 	Username        string  `json:"username"`
 	Password        string  `json:"password"`
 	ConfirmPassword string  `json:"confirm_password"`
