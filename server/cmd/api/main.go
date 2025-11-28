@@ -19,5 +19,3 @@ func main() {
 		log.Fatalf("failed to start server: %v", err)
 	}
 }
-
-

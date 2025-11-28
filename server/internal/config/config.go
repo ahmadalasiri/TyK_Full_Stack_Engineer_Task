@@ -1,6 +1,10 @@
 package config
 
-import "os"
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 type Config struct {
 	Port string
@@ -8,18 +12,21 @@ type Config struct {
 }
 
 func Load() (*Config, error) {
+	_ = godotenv.Load()
+
 	cfg := &Config{
 		Port: getEnv("SERVER_PORT", "8080"),
-		DSN:  getEnv("DATABASE_URL", "postgres://user:password@localhost:5432/tyk_registration?sslmode=disable"),
+		DSN:  getEnv("DATABASE_URL"),
 	}
 	return cfg, nil
 }
 
-func getEnv(key, fallback string) string {
+func getEnv(key string, fallback ...string) string {
 	if v := os.Getenv(key); v != "" {
 		return v
 	}
-	return fallback
+	if len(fallback) > 0 {
+		return fallback[0]
+	}
+	panic("required environment variable " + key + " is not set")
 }
-
-
