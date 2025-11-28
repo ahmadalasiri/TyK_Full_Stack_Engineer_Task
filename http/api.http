@@ -1,0 +1,198 @@
+### TyK Registration API - HTTP Request Collection
+### Use with VS Code REST Client extension or similar tools
+### Base URL - Update this variable or replace in each request
+
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### Variables for testing
+@testEmail = test@example.com
+@testUsername = testuser123
+@testPassword = TestPass123!
+
+###
+
+### Health Check
+GET {{baseUrl}}/health
+
+###
+
+### Readiness Check (requires DB connection)
+GET {{baseUrl}}/ready
+
+###
+
+### Check Username Availability - Available
+GET {{baseUrl}}/api/username-availability?username={{testUsername}}
+
+###
+
+### Check Username Availability - Taken (after registration)
+GET {{baseUrl}}/api/username-availability?username=existinguser
+
+###
+
+### Register New User - Complete Registration
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john.doe@example.com",
+  "phone": "+1234567890",
+  "street": "123 Main Street",
+  "city": "New York",
+  "state": "New York",
+  "country": "United States",
+  "username": "johndoe123",
+  "password": "SecurePass123!",
+  "confirm_password": "SecurePass123!",
+  "terms_accepted": true,
+  "newsletter": true
+}
+
+###
+
+### Register New User - Without Phone (Optional Field)
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "first_name": "Jane",
+  "last_name": "Smith",
+  "email": "jane.smith@example.com",
+  "phone": null,
+  "street": "456 Oak Avenue",
+  "city": "Los Angeles",
+  "state": "California",
+  "country": "United States",
+  "username": "janesmith456",
+  "password": "MySecurePass456!",
+  "confirm_password": "MySecurePass456!",
+  "terms_accepted": true,
+  "newsletter": false
+}
+
+###
+
+### Register New User - UK Country (Bonus: Email must contain .uk)
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "first_name": "James",
+  "last_name": "Wilson",
+  "email": "james.wilson@example.uk",
+  "phone": "+441234567890",
+  "street": "789 High Street",
+  "city": "London",
+  "state": "England",
+  "country": "United Kingdom",
+  "username": "jameswilson789",
+  "password": "UKPass789!",
+  "confirm_password": "UKPass789!",
+  "terms_accepted": true,
+  "newsletter": true
+}
+
+###
+
+### Register New User - Validation Error Example (Missing Required Fields)
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "first_name": "",
+  "last_name": "Doe",
+  "email": "invalid-email",
+  "username": "short",
+  "password": "weak",
+  "confirm_password": "different",
+  "terms_accepted": false
+}
+
+###
+
+### Register New User - Business Error Example (Duplicate Email)
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "first_name": "Duplicate",
+  "last_name": "User",
+  "email": "john.doe@example.com",
+  "street": "999 Test Street",
+  "city": "Test City",
+  "state": "Test State",
+  "country": "United States",
+  "username": "duplicateuser",
+  "password": "TestPass123!",
+  "confirm_password": "TestPass123!",
+  "terms_accepted": true,
+  "newsletter": false
+}
+
+###
+
+### Register New User - Business Error Example (Duplicate Username)
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "first_name": "Another",
+  "last_name": "User",
+  "email": "another@example.com",
+  "street": "888 Test Avenue",
+  "city": "Test City",
+  "state": "Test State",
+  "country": "United States",
+  "username": "johndoe123",
+  "password": "TestPass123!",
+  "confirm_password": "TestPass123!",
+  "terms_accepted": true,
+  "newsletter": false
+}
+
+###
+
+### Register New User - Cross-Field Validation Error (Password Mismatch)
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "first_name": "Test",
+  "last_name": "User",
+  "email": "test@example.com",
+  "street": "777 Test Road",
+  "city": "Test City",
+  "state": "Test State",
+  "country": "United States",
+  "username": "testuser999",
+  "password": "TestPass123!",
+  "confirm_password": "DifferentPass456!",
+  "terms_accepted": true,
+  "newsletter": false
+}
+
+###
+
+### Register New User - UK Email Domain Validation Error
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "first_name": "UK",
+  "last_name": "User",
+  "email": "uk.user@example.com",
+  "street": "666 UK Street",
+  "city": "London",
+  "state": "England",
+  "country": "United Kingdom",
+  "username": "ukuser123",
+  "password": "UKPass123!",
+  "confirm_password": "UKPass123!",
+  "terms_accepted": true,
+  "newsletter": false
+}
+

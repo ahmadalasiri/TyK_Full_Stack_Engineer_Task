@@ -32,3 +32,4 @@ func GetRegistrationFromCtx(c *fiber.Ctx) *models.RegistrationRequest {
 
 
 
+

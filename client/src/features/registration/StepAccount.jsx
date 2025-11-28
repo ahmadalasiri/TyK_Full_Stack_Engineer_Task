@@ -16,7 +16,7 @@ import {
   XCircle,
   Loader2,
 } from "lucide-react";
-import { checkUsernameAvailability } from "../../api/registration.js";
+import { checkUsernameAvailability } from "../../http/requests.js";
 
 export function StepAccount() {
   const {
