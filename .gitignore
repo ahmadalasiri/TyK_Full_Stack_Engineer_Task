@@ -4,3 +4,5 @@ client/dist/
 server/internal/db/sqlc/
 .env
 server/bin/
+server/tmp/
+server/*.log

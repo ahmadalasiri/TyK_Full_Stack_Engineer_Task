@@ -98,6 +98,8 @@ Configure environment (either via real env vars or a local `.env` that you load 
 
 ### Backend (Go + Fiber)
 
+#### Option 1: Standard Run
+
 From `server/`:
 
 ```bash
@@ -105,6 +107,27 @@ export SERVER_PORT=8080
 export DATABASE_URL=postgres://tyk_user:tyk_password@localhost:5432/tyk_registration?sslmode=disable
 go run ./cmd/api
 ```
+
+#### Option 2: Auto-Reload with Air (Recommended for Development)
+
+[Air](https://github.com/cosmtrek/air) automatically rebuilds and restarts your Go server when files change (like nodemon for Node.js).
+
+**Install Air:**
+```bash
+go install github.com/cosmtrek/air@latest
+```
+
+**Run with auto-reload:**
+```bash
+cd server
+air
+```
+
+Air will watch for changes in `.go` files and automatically rebuild and restart the server. Configuration is in `server/.air.toml`.
+
+**Alternative tools:**
+- **Fresh**: `go install github.com/gravityblast/fresh@latest` then `fresh`
+- **CompileDaemon**: `go install github.com/githubnemo/CompileDaemon@latest` then `CompileDaemon -command="./bin/server"`
 
 The API will listen on `http://localhost:8080`.
 

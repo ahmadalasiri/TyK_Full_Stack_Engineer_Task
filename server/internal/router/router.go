@@ -73,5 +73,3 @@ func New(cfg *config.Config) *fiber.App {
 
 	return app
 }
-
-
