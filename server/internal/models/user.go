@@ -25,8 +25,3 @@ type UsernameAvailabilityResponse struct {
 	Username  string `json:"username"`
 	Available bool   `json:"available"`
 }
-
-
-
-
-

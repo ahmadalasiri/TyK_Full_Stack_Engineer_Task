@@ -34,8 +34,3 @@ func BusinessValidator(repo repositories.UserRepository) RegistrationValidator {
 		return nil
 	}
 }
-
-
-
-
-

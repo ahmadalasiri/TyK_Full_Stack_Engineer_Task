@@ -48,5 +48,3 @@ func (h *RegisterHandler) Handle(c *fiber.Ctx) error {
 	}
 	return response.SendSuccess(c, http.StatusCreated, resp)
 }
-
-
