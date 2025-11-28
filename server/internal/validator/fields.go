@@ -4,6 +4,8 @@ import (
 	"regexp"
 	"strings"
 	"unicode"
+
+	"github.com/nyaruka/phonenumbers"
 )
 
 var emailRegex = regexp.MustCompile(`^[^@\s]+@[^@\s]+\.[^@\s]+$`)
@@ -13,19 +15,23 @@ func ValidateEmail(email string) bool {
 }
 
 func ValidatePhone(phone string) bool {
+	phone = strings.TrimSpace(phone)
 	if phone == "" {
 		return true
 	}
-	phone = strings.TrimSpace(phone)
-	if len(phone) < 6 {
+
+	if !strings.HasPrefix(phone, "+") {
+		phone = "+" + phone
+	}
+
+	// Parse the phone number - library will auto-detect country from the country code
+	num, err := phonenumbers.Parse(phone, "")
+	if err != nil {
 		return false
 	}
-	for _, r := range phone {
-		if !(unicode.IsDigit(r) || strings.ContainsRune("+()- ", r)) {
-			return false
-		}
-	}
-	return true
+
+	// Validate the phone number against its detected country's format
+	return phonenumbers.IsValidNumber(num)
 }
 
 func ValidatePassword(password string) bool {

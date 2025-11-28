@@ -23,8 +23,11 @@ func FieldValidator() RegistrationValidator {
 		if !validator.ValidateEmail(req.Email) {
 			fields["email"] = "Invalid email address"
 		}
-		if req.Phone != nil && !validator.ValidatePhone(*req.Phone) {
-			fields["phone"] = "Invalid phone number"
+		if req.Phone != nil && *req.Phone != "" {
+			// Validate phone number - country code must be in the phone number (e.g., +20, +1)
+			if !validator.ValidatePhone(*req.Phone) {
+				fields["phone"] = "Invalid phone number"
+			}
 		}
 		if strings.TrimSpace(req.Street) == "" {
 			fields["street"] = "Street address is required"
