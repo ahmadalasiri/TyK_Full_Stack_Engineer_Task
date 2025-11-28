@@ -7,7 +7,7 @@ import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
 import { Button } from "../../components/ui/button.jsx";
 import { Checkbox } from "../../components/ui/checkbox.jsx";
-import { Card, CardContent } from "../../components/ui/card.jsx";
+import { StepErrorBanner } from "./StepErrorBanner.jsx";
 import {
   ChevronLeft,
   ChevronRight,
@@ -16,7 +16,6 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
-  AlertCircle,
 } from "lucide-react";
 import { checkUsernameAvailability } from "../../api/registration.js";
 
@@ -116,26 +115,7 @@ export function StepAccount() {
       onChange={handleFormChange}
       className="space-y-6"
     >
-      {stepError && (
-        <Card className="border-destructive bg-destructive/10">
-          <CardContent className="pt-6">
-            <div className="flex items-start space-x-3">
-              <AlertCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
-              <div className="flex-1">
-                {Array.isArray(stepError) ? (
-                  <ul className="list-disc list-inside space-y-1 text-sm text-destructive">
-                    {stepError.map((msg, idx) => (
-                      <li key={idx}>{msg}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-destructive">{stepError}</p>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <StepErrorBanner stepError={stepError} />
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="username" className="text-sm font-medium">
