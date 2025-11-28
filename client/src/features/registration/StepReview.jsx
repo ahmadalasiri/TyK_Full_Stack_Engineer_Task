@@ -18,10 +18,69 @@ import {
 } from "lucide-react";
 
 export function StepReview() {
-  const { registrationData, setCurrentStep, resetForm } = useRegistration();
+  const { registrationData, setCurrentStep, resetForm, setBackendErrors } =
+    useRegistration();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState(null);
+
+  // Map backend field names to frontend field names
+  const fieldNameMap = {
+    first_name: "firstName",
+    last_name: "lastName",
+    street: "streetAddress",
+    country_iso: "countryIso",
+    confirm_password: "confirmPassword",
+    terms_accepted: "agreeToTerms",
+  };
+
+  // Determine which step contains a field
+  const getStepForField = (fieldName) => {
+    const step1Fields = ["firstName", "lastName", "email", "phone"];
+    const step2Fields = [
+      "streetAddress",
+      "city",
+      "state",
+      "country",
+      "countryIso",
+    ];
+    const step3Fields = [
+      "username",
+      "password",
+      "confirmPassword",
+      "agreeToTerms",
+    ];
+
+    if (step1Fields.includes(fieldName)) return 1;
+    if (step2Fields.includes(fieldName)) return 2;
+    if (step3Fields.includes(fieldName)) return 3;
+    return 1; // Default to step 1
+  };
+
+  // Group backend field errors by step number
+  const groupErrorsByStep = (backendFieldErrors) => {
+    const stepErrors = {};
+
+    Object.entries(backendFieldErrors).forEach(([backendField, message]) => {
+      const frontendField = fieldNameMap[backendField] || backendField;
+      const stepNumber = getStepForField(frontendField);
+
+      if (!stepErrors[stepNumber]) {
+        stepErrors[stepNumber] = [];
+      }
+      stepErrors[stepNumber].push(message);
+    });
+
+    // Convert arrays to single strings (or keep as arrays for multiple errors)
+    const stepErrorsFormatted = {};
+    Object.entries(stepErrors).forEach(([step, messages]) => {
+      const stepNum = parseInt(step, 10);
+      stepErrorsFormatted[stepNum] =
+        messages.length === 1 ? messages[0] : messages; // Keep as array if multiple errors
+    });
+
+    return stepErrorsFormatted;
+  };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -59,27 +118,23 @@ export function StepReview() {
       const errorMessage =
         err.message ||
         "Registration failed. Please check your information and try again.";
-      const fieldErrors = err.fieldErrors || {};
+      const backendFieldErrors = err.fieldErrors || {};
 
       setError({
         message: errorMessage,
-        fieldErrors: fieldErrors,
+        fieldErrors: backendFieldErrors,
       });
 
-      // Navigate to the relevant step if there's a field error
-      if (fieldErrors.email) {
-        // Email error - go to personal info step
-        setTimeout(() => setCurrentStep(1), 500);
-      } else if (fieldErrors.country || fieldErrors.country_iso) {
-        // Country/address error - go to address step
-        setTimeout(() => setCurrentStep(2), 500);
-      } else if (
-        fieldErrors.username ||
-        fieldErrors.password ||
-        fieldErrors.confirm_password
-      ) {
-        // Account error - go to account step
-        setTimeout(() => setCurrentStep(3), 500);
+      // Group errors by step number
+      const stepErrors = groupErrorsByStep(backendFieldErrors);
+
+      // Store step-level errors in context
+      setBackendErrors(stepErrors);
+
+      // Navigate to the first step with errors
+      const firstErrorStep = Object.keys(stepErrors)[0];
+      if (firstErrorStep) {
+        setTimeout(() => setCurrentStep(parseInt(firstErrorStep)), 500);
       }
     } finally {
       setIsSubmitting(false);
@@ -113,21 +168,10 @@ export function StepReview() {
                 <p className="text-sm font-medium text-destructive">
                   {error.message}
                 </p>
-                {error.fieldErrors &&
-                  Object.keys(error.fieldErrors).length > 0 && (
-                    <ul className="list-disc list-inside space-y-1 text-sm text-destructive/90">
-                      {Object.entries(error.fieldErrors).map(
-                        ([field, message]) => (
-                          <li key={field}>
-                            <span className="font-medium capitalize">
-                              {field.replace(/_/g, " ")}:
-                            </span>{" "}
-                            {message}
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  )}
+                <p className="text-sm text-destructive/90">
+                  Please review the highlighted steps below and correct any
+                  errors.
+                </p>
               </div>
             </div>
           </CardContent>

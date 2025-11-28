@@ -7,6 +7,7 @@ import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
 import { Button } from "../../components/ui/button.jsx";
 import { Checkbox } from "../../components/ui/checkbox.jsx";
+import { Card, CardContent } from "../../components/ui/card.jsx";
 import {
   ChevronLeft,
   ChevronRight,
@@ -15,6 +16,7 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { checkUsernameAvailability } from "../../api/registration.js";
 
@@ -24,6 +26,8 @@ export function StepAccount() {
     updateAccountInfo,
     setCurrentStep,
     markStepComplete,
+    backendErrors,
+    setBackendErrors,
   } = useRegistration();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -42,6 +46,20 @@ export function StepAccount() {
     mode: "onChange",
     defaultValues: registrationData.account,
   });
+
+  // Get step-level error for this step (step 3)
+  const stepError = backendErrors[3];
+
+  // Clear step error when user starts editing
+  const handleFormChange = () => {
+    if (stepError) {
+      setBackendErrors((prev) => {
+        const updated = { ...prev };
+        delete updated[3];
+        return updated;
+      });
+    }
+  };
 
   const username = watch("username");
   const agreeToTerms = watch("agreeToTerms");
@@ -93,7 +111,31 @@ export function StepAccount() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      onChange={handleFormChange}
+      className="space-y-6"
+    >
+      {stepError && (
+        <Card className="border-destructive bg-destructive/10">
+          <CardContent className="pt-6">
+            <div className="flex items-start space-x-3">
+              <AlertCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                {Array.isArray(stepError) ? (
+                  <ul className="list-disc list-inside space-y-1 text-sm text-destructive">
+                    {stepError.map((msg, idx) => (
+                      <li key={idx}>{msg}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-destructive">{stepError}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="username" className="text-sm font-medium">
@@ -215,9 +257,9 @@ export function StepAccount() {
             <Checkbox
               id="agreeToTerms"
               checked={agreeToTerms}
-              onCheckedChange={(checked) =>
-                setValue("agreeToTerms", checked, { shouldValidate: true })
-              }
+              onCheckedChange={(checked) => {
+                setValue("agreeToTerms", checked, { shouldValidate: true });
+              }}
               className={errors.agreeToTerms ? "border-destructive" : ""}
             />
             <div className="space-y-1">

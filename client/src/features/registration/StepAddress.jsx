@@ -6,6 +6,7 @@ import { useRegistration } from "../../hooks/useRegistration.js";
 import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
 import { Button } from "../../components/ui/button.jsx";
+import { Card, CardContent } from "../../components/ui/card.jsx";
 import {
   Select,
   SelectContent,
@@ -13,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/select.jsx";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
 import { Country, State } from "country-state-city";
 
 export function StepAddress() {
@@ -22,6 +23,8 @@ export function StepAddress() {
     updateAddressInfo,
     setCurrentStep,
     markStepComplete,
+    backendErrors,
+    setBackendErrors,
   } = useRegistration();
 
   const [selectedCountryCode, setSelectedCountryCode] = useState("");
@@ -51,6 +54,20 @@ export function StepAddress() {
     resolver: zodResolver(addressInfoSchema),
     defaultValues: registrationData.address,
   });
+
+  // Get step-level error for this step (step 2)
+  const stepError = backendErrors[2];
+
+  // Clear step error when user starts editing
+  const handleFormChange = () => {
+    if (stepError) {
+      setBackendErrors((prev) => {
+        const updated = { ...prev };
+        delete updated[2];
+        return updated;
+      });
+    }
+  };
 
   useEffect(() => {
     if (registrationData.address.country) {
@@ -94,7 +111,31 @@ export function StepAddress() {
   const handleBack = () => setCurrentStep(1);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      onChange={handleFormChange}
+      className="space-y-6"
+    >
+      {stepError && (
+        <Card className="border-destructive bg-destructive/10">
+          <CardContent className="pt-6">
+            <div className="flex items-start space-x-3">
+              <AlertCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                {Array.isArray(stepError) ? (
+                  <ul className="list-disc list-inside space-y-1 text-sm text-destructive">
+                    {stepError.map((msg, idx) => (
+                      <li key={idx}>{msg}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-destructive">{stepError}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       {/* Hidden field to ensure countryIso is always included in form data */}
       <input type="hidden" {...register("countryIso")} />
       <div className="space-y-4">
@@ -182,9 +223,9 @@ export function StepAddress() {
             </Label>
             <Select
               value={watch("state")}
-              onValueChange={(value) =>
-                setValue("state", value, { shouldValidate: true })
-              }
+              onValueChange={(value) => {
+                setValue("state", value, { shouldValidate: true });
+              }}
               disabled={!selectedCountryCode}
             >
               <SelectTrigger

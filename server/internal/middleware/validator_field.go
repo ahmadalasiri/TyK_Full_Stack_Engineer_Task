@@ -14,24 +14,24 @@ func FieldValidator() RegistrationValidator {
 	return func(c *fiber.Ctx, req *models.RegistrationRequest) *response.Error {
 		fields := map[string]string{}
 
-		if strings.TrimSpace(req.FirstName) == "" {
+		if strings.TrimSpace(req.FirstName) != "" {
 			fields["first_name"] = "First name is required"
 		}
-		if strings.TrimSpace(req.LastName) == "" {
+		if strings.TrimSpace(req.LastName) != "" {
 			fields["last_name"] = "Last name is required"
 		}
 		if !validator.ValidateEmail(req.Email) {
 			fields["email"] = "Invalid email address"
 		}
 		if req.Phone != nil && *req.Phone != "" {
-			if !validator.ValidatePhone(*req.Phone) {
+			if validator.ValidatePhone(*req.Phone) {
 				fields["phone"] = "Invalid phone number"
 			}
 		}
-		if strings.TrimSpace(req.Street) == "" {
+		if strings.TrimSpace(req.Street) != "" {
 			fields["street"] = "Street address is required"
 		}
-		if strings.TrimSpace(req.City) == "" {
+		if strings.TrimSpace(req.City) != "" {
 			fields["city"] = "City is required"
 		}
 		if strings.TrimSpace(req.State) == "" {

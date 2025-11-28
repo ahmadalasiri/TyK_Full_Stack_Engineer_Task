@@ -28,6 +28,7 @@ export function RegistrationProvider({ children }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [registrationData, setRegistrationData] = useState(initialData);
   const [completedSteps, setCompletedSteps] = useState(new Set());
+  const [backendErrors, setBackendErrors] = useState({}); // { stepNumber: string[] } - step-level errors
 
   const updatePersonalInfo = (data) => {
     setRegistrationData((prev) => ({ ...prev, personal: data }));
@@ -53,6 +54,7 @@ export function RegistrationProvider({ children }) {
     setRegistrationData(initialData);
     setCurrentStep(1);
     setCompletedSteps(new Set());
+    setBackendErrors({});
   };
 
   const value = {
@@ -65,6 +67,8 @@ export function RegistrationProvider({ children }) {
     completedSteps,
     markStepComplete,
     resetForm,
+    backendErrors,
+    setBackendErrors,
   };
 
   return (
