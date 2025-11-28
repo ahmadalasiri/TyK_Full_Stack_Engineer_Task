@@ -66,31 +66,27 @@ go mod download
 
 ### 2. Database Setup (Local)
 
-Create the database and user (example):
+Create the database (if it doesn't exist):
 
 ```bash
 createdb tyk_registration
-psql -d tyk_registration -c "CREATE USER tyk_user WITH PASSWORD 'tyk_password';"
-psql -d tyk_registration -c "GRANT ALL PRIVILEGES ON DATABASE tyk_registration TO tyk_user;"
+# Or using psql:
+# psql -c "CREATE DATABASE tyk_registration;"
 ```
 
-Apply migrations:
-
-```bash
-psql -d tyk_registration -f internal/db/migrations/001_create_users.sql
-```
-
-Generate sqlc code:
+Generate sqlc code (required for database queries):
 
 ```bash
 cd server
 sqlc generate
 ```
 
-Configure environment (either via real env vars or a local `.env` that you load in your shell):
+Configure environment (either via real env vars or a local `.env` file in `server/`):
 
 - `SERVER_PORT=8080`
-- `DATABASE_URL=postgres://tyk_user:tyk_password@localhost:5432/tyk_registration?sslmode=disable`
+- `DATABASE_URL=postgres://postgres:password@localhost:5432/tyk_registration?sslmode=disable`
+
+**Note:** Database migrations run automatically on server startup using `golang-migrate`. No manual migration step needed!
 
 ---
 
@@ -113,11 +109,13 @@ go run ./cmd/api
 [Air](https://github.com/cosmtrek/air) automatically rebuilds and restarts your Go server when files change (like nodemon for Node.js).
 
 **Install Air:**
+
 ```bash
 go install github.com/cosmtrek/air@latest
 ```
 
 **Run with auto-reload:**
+
 ```bash
 cd server
 air
@@ -126,6 +124,7 @@ air
 Air will watch for changes in `.go` files and automatically rebuild and restart the server. Configuration is in `server/.air.toml`.
 
 **Alternative tools:**
+
 - **Fresh**: `go install github.com/gravityblast/fresh@latest` then `fresh`
 - **CompileDaemon**: `go install github.com/githubnemo/CompileDaemon@latest` then `CompileDaemon -command="./bin/server"`
 

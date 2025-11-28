@@ -21,7 +21,7 @@ func New(cfg *config.Config) *fiber.App {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			log.Printf("unhandled error: %v", err)
-			return response.SendError(c, http.StatusInternalServerError, response.NewInternalError("Internal server error"))
+			return response.SendError(c, http.StatusInternalServerError, response.NewInternalError("Internal server error ❌"))
 		},
 	})
 

@@ -19,8 +19,3 @@ func Logging() fiber.Handler {
 		return err
 	}
 }
-
-
-
-
-
