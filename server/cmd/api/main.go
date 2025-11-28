@@ -14,7 +14,6 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 
-	// Run migrations on startup
 	log.Println("Running database migrations...")
 	if err := db.RunMigrations(cfg.DSN); err != nil {
 		log.Fatalf("failed to run migrations: %v", err)

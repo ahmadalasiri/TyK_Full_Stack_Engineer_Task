@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 
 	"tyk-registration-server/internal/db/sqlc"
@@ -28,25 +27,19 @@ func NewUserRepository(pool sqlc.DBTX) UserRepository {
 }
 
 func (r *userRepository) EmailExists(ctx context.Context, email string) (bool, error) {
-	_, err := r.q.GetUserByEmail(ctx, email)
+	exists, err := r.q.CheckEmailExists(ctx, email)
 	if err != nil {
-		if err == pgx.ErrNoRows {
-			return false, nil
-		}
 		return false, err
 	}
-	return true, nil
+	return exists, nil
 }
 
 func (r *userRepository) UsernameExists(ctx context.Context, username string) (bool, error) {
-	_, err := r.q.GetUserByUsername(ctx, username)
+	exists, err := r.q.CheckUsernameExists(ctx, username)
 	if err != nil {
-		if err == pgx.ErrNoRows {
-			return false, nil
-		}
 		return false, err
 	}
-	return true, nil
+	return exists, nil
 }
 
 func (r *userRepository) CreateUser(ctx context.Context, req *models.RegistrationRequest, passwordHash string) (uuid.UUID, error) {
@@ -80,5 +73,3 @@ func (r *userRepository) CreateUser(ctx context.Context, req *models.Registratio
 	}
 	return id, nil
 }
-
-

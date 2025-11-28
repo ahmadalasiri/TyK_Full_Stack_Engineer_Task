@@ -16,3 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Unique constraint on phone (allows multiple NULLs, but ensures uniqueness for non-null values)
+-- This must be a partial unique index because phone is optional
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_phone_unique ON users(phone) WHERE phone IS NOT NULL;
+
