@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { accountInfoSchema } from "../../validation/schemas.js";
 import { useRegistration } from "../../hooks/useRegistration.js";
+import { useStepError } from "../../hooks/useStepError.js";
 import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
 import { Button } from "../../components/ui/button.jsx";
@@ -25,9 +26,8 @@ export function StepAccount() {
     updateAccountInfo,
     setCurrentStep,
     markStepComplete,
-    backendErrors,
-    setBackendErrors,
   } = useRegistration();
+  const { stepError, handleFormChange } = useStepError(3);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -45,20 +45,6 @@ export function StepAccount() {
     mode: "onChange",
     defaultValues: registrationData.account,
   });
-
-  // Get step-level error for this step (step 3)
-  const stepError = backendErrors[3];
-
-  // Clear step error when user starts editing
-  const handleFormChange = () => {
-    if (stepError) {
-      setBackendErrors((prev) => {
-        const updated = { ...prev };
-        delete updated[3];
-        return updated;
-      });
-    }
-  };
 
   const username = watch("username");
   const agreeToTerms = watch("agreeToTerms");

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { RegistrationContext } from "./RegistrationContextValue.jsx";
+import React, { useState, createContext } from "react";
+
+export const RegistrationContext = createContext(undefined);
 
 const initialData = {
   personal: {

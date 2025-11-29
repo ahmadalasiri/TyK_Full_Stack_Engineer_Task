@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { RegistrationContext } from "../context/RegistrationContextValue.jsx";
+import { RegistrationContext } from "../context/RegistrationContext.jsx";
 
 export function useRegistration() {
   const ctx = useContext(RegistrationContext);
@@ -8,5 +8,3 @@ export function useRegistration() {
   }
   return ctx;
 }
-
-

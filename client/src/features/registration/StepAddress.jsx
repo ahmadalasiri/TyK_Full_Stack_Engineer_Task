@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addressInfoSchema } from "../../validation/schemas.js";
 import { useRegistration } from "../../hooks/useRegistration.js";
+import { useStepError } from "../../hooks/useStepError.js";
 import { Input } from "../../components/ui/input.jsx";
 import { Label } from "../../components/ui/label.jsx";
 import { Button } from "../../components/ui/button.jsx";
@@ -23,9 +24,8 @@ export function StepAddress() {
     updateAddressInfo,
     setCurrentStep,
     markStepComplete,
-    backendErrors,
-    setBackendErrors,
   } = useRegistration();
+  const { stepError, handleFormChange } = useStepError(2);
 
   const [selectedCountryCode, setSelectedCountryCode] = useState("");
 
@@ -60,20 +60,6 @@ export function StepAddress() {
     resolver: zodResolver(addressInfoSchema),
     defaultValues: registrationData.address,
   });
-
-  // Get step-level error for this step (step 2)
-  const stepError = backendErrors[2];
-
-  // Clear step error when user starts editing
-  const handleFormChange = () => {
-    if (stepError) {
-      setBackendErrors((prev) => {
-        const updated = { ...prev };
-        delete updated[2];
-        return updated;
-      });
-    }
-  };
 
   useEffect(() => {
     if (registrationData.address.country) {
