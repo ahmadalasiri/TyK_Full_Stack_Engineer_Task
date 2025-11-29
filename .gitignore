@@ -6,3 +6,4 @@ server/internal/db/sqlc/
 server/bin/
 server/tmp/
 server/*.log
+server/*.exe

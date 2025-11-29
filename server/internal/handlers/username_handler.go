@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"net/http"
 	"strings"
 
@@ -29,7 +28,7 @@ func (h *UsernameHandler) Handle(c *fiber.Ctx) error {
 		})
 	}
 
-	ctx := context.Background()
+	ctx := c.Context()
 	exists, err := h.repo.UsernameExists(ctx, username)
 	if err != nil {
 		return response.SendError(c, http.StatusInternalServerError, response.NewInternalError("Failed to verify username"))
@@ -40,9 +39,3 @@ func (h *UsernameHandler) Handle(c *fiber.Ctx) error {
 		Available: !exists,
 	})
 }
-
-
-
-
-
-

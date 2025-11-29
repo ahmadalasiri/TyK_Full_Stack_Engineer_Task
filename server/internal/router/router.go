@@ -65,7 +65,7 @@ func New(cfg *config.Config) *fiber.App {
 		return usernameHandler.Handle(c)
 	})
 
-	// Static file serving for built frontend (the Fiber image will serve client/dist)
+	// Static file serving for built frontend
 	app.Static("/", "../client/dist")
 	app.Get("/*", func(c *fiber.Ctx) error {
 		return c.SendFile("../client/dist/index.html")

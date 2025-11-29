@@ -1,8 +1,6 @@
 package middleware
 
 import (
-	"context"
-
 	"github.com/gofiber/fiber/v2"
 
 	"tyk-registration-server/internal/models"
@@ -13,7 +11,7 @@ import (
 func BusinessValidator(repo repositories.UserRepository) RegistrationValidator {
 	return func(c *fiber.Ctx, req *models.RegistrationRequest) *response.Error {
 		fields := map[string]string{}
-		ctx := context.Background()
+		ctx := c.Context()
 
 		if exists, err := repo.EmailExists(ctx, req.Email); err != nil {
 			return response.NewInternalError("failed to validate email uniqueness")

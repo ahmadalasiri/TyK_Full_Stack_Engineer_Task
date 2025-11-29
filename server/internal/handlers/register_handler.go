@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -36,7 +35,7 @@ func (h *RegisterHandler) Handle(c *fiber.Ctx) error {
 		return response.SendError(c, status, err)
 	}
 
-	ctx := context.Background()
+	ctx := c.Context()
 	userID, svcErr := h.service.Register(ctx, req)
 	if svcErr != nil {
 		return response.SendError(c, http.StatusInternalServerError, response.NewInternalError("Failed to create user"))

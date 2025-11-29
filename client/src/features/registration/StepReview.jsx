@@ -104,7 +104,7 @@ export function StepReview() {
         newsletter: registrationData.account.subscribeNewsletter,
       };
 
-      const result = await registerUser(payload);
+      await registerUser(payload);
       setIsSuccess(true);
 
       // Reset form after 2 seconds
@@ -321,7 +321,7 @@ export function StepReview() {
               Submitting...
             </>
           ) : (
-            "Submit Registration"
+            "Submit"
           )}
         </Button>
       </div>
