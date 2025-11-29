@@ -1,17 +1,22 @@
 package middleware
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
-	"tyk-registration-server/internal/models"
 	"tyk-registration-server/internal/response"
 	"tyk-registration-server/internal/validator"
 )
 
-func FieldValidator() RegistrationValidator {
-	return func(c *fiber.Ctx, req *models.RegistrationRequest) *response.Error {
+func FieldValidator() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		req := GetRegistrationFromCtx(c)
+		if req == nil {
+			return response.SendError(c, http.StatusBadRequest, response.NewValidationError("Invalid request body", nil))
+		}
+
 		fields := map[string]string{}
 
 		if strings.TrimSpace(req.FirstName) == "" {
@@ -23,8 +28,8 @@ func FieldValidator() RegistrationValidator {
 		if !validator.ValidateEmail(req.Email) {
 			fields["email"] = "Invalid email address"
 		}
-		if req.Phone != nil && *req.Phone == "" {
-			if validator.ValidatePhone(*req.Phone) {
+		if req.Phone != nil && *req.Phone != "" {
+			if !validator.ValidatePhone(*req.Phone) {
 				fields["phone"] = "Invalid phone number"
 			}
 		}
@@ -51,9 +56,9 @@ func FieldValidator() RegistrationValidator {
 		}
 
 		if len(fields) > 0 {
-			return response.NewValidationError("There are validation errors", fields)
+			return response.SendError(c, http.StatusBadRequest, response.NewValidationError("There are validation errors", fields))
 		}
 
-		return nil
+		return c.Next()
 	}
 }

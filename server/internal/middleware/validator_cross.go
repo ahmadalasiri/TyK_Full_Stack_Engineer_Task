@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
 
 	"tyk-registration-server/internal/models"
@@ -8,8 +10,13 @@ import (
 	"tyk-registration-server/internal/validator"
 )
 
-func CrossFieldValidator() RegistrationValidator {
-	return func(c *fiber.Ctx, req *models.RegistrationRequest) *response.Error {
+func CrossFieldValidator() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		req := GetRegistrationFromCtx(c)
+		if req == nil {
+			return response.SendError(c, http.StatusBadRequest, response.NewValidationError("Invalid request body", nil))
+		}
+
 		fields := map[string]string{}
 
 		if req.Password != req.ConfirmPassword {
@@ -21,9 +28,9 @@ func CrossFieldValidator() RegistrationValidator {
 		}
 
 		if len(fields) > 0 {
-			return response.NewValidationError("Cross-field validation failed", fields)
+			return response.SendError(c, http.StatusBadRequest, response.NewValidationError("Cross-field validation failed", fields))
 		}
 
-		return nil
+		return c.Next()
 	}
 }

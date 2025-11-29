@@ -12,27 +12,17 @@ import (
 )
 
 type RegisterHandler struct {
-	service    services.UserService
-	validators []middleware.RegistrationValidator
+	service services.UserService
 }
 
-func NewRegisterHandler(service services.UserService, validators ...middleware.RegistrationValidator) *RegisterHandler {
-	return &RegisterHandler{service: service, validators: validators}
+func NewRegisterHandler(service services.UserService) *RegisterHandler {
+	return &RegisterHandler{service: service}
 }
 
 func (h *RegisterHandler) Handle(c *fiber.Ctx) error {
 	req := middleware.GetRegistrationFromCtx(c)
 	if req == nil {
 		return response.SendError(c, http.StatusBadRequest, response.NewValidationError("Invalid request body", nil))
-	}
-
-	err := middleware.RunValidationChain(c, req, h.validators...)
-	if err != nil {
-		status := http.StatusBadRequest
-		if err.Code == "business_error" {
-			status = http.StatusUnprocessableEntity
-		}
-		return response.SendError(c, status, err)
 	}
 
 	ctx := c.Context()

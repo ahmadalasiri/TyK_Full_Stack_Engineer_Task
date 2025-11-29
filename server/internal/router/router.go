@@ -37,13 +37,7 @@ func New(cfg *config.Config) *fiber.App {
 	repo := repositories.NewUserRepository(pool)
 	userService := services.NewUserService(repo)
 
-	validators := []middleware.RegistrationValidator{
-		middleware.FieldValidator(),
-		middleware.CrossFieldValidator(),
-		middleware.BusinessValidator(repo),
-	}
-
-	registerHandler := handlers.NewRegisterHandler(userService, validators...)
+	registerHandler := handlers.NewRegisterHandler(userService)
 	usernameHandler := handlers.NewUsernameHandler(repo)
 
 	app.Get("/health", func(c *fiber.Ctx) error {
@@ -58,9 +52,14 @@ func New(cfg *config.Config) *fiber.App {
 	})
 
 	api := app.Group("/api")
-	api.Post("/register", middleware.ParseRegistrationJSON(), func(c *fiber.Ctx) error {
-		return registerHandler.Handle(c)
-	})
+	api.Post("/register",
+		middleware.ParseRegistrationJSON(),
+		middleware.FieldValidator(),
+		middleware.CrossFieldValidator(),
+		middleware.BusinessValidator(repo),
+		func(c *fiber.Ctx) error {
+			return registerHandler.Handle(c)
+		})
 	api.Get("/username-availability", func(c *fiber.Ctx) error {
 		return usernameHandler.Handle(c)
 	})
