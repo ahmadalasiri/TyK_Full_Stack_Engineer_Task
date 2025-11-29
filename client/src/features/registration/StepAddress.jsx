@@ -31,10 +31,16 @@ export function StepAddress() {
 
   // Get all countries from country-state-city
   const countries = useMemo(() => {
-    return Country.getAllCountries().map((country) => ({
-      name: country.name,
-      isoCode: country.isoCode,
-    }));
+    return Country.getAllCountries().reduce((acc, country) => {
+      // Only include countries that have states
+      if (State.getStatesOfCountry(country.isoCode).length > 0) {
+        acc.push({
+          name: country.name,
+          isoCode: country.isoCode,
+        });
+      }
+      return acc;
+    }, []);
   }, []);
 
   // Get states for selected country using country-state-city
