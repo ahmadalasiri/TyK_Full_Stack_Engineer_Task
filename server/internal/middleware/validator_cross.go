@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"tyk-registration-server/internal/models"
 	"tyk-registration-server/internal/response"
 	"tyk-registration-server/internal/validator"
 )

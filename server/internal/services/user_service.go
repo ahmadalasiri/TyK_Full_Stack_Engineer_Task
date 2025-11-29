@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"time"
 
 	"github.com/google/uuid"
 
@@ -28,7 +27,6 @@ func (s *userService) Register(ctx context.Context, req *models.RegistrationRequ
 	if err != nil {
 		return uuid.Nil, err
 	}
-	// sleep for 3 seconds
-	time.Sleep(3 * time.Second)
+
 	return s.repo.CreateUser(ctx, req, hash)
 }

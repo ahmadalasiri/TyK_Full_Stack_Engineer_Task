@@ -80,7 +80,7 @@ func (r *userRepository) CreateUser(ctx context.Context, req *models.Registratio
 		Newsletter:    req.Newsletter,
 	}
 
-	_, err := r.q.CreateUser(ctx, params)
+	err := r.q.CreateUser(ctx, params)
 	if err != nil {
 		return uuid.Nil, err
 	}

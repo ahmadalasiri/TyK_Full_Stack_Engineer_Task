@@ -1,4 +1,4 @@
--- name: CreateUser :one
+-- name: CreateUser :exec
 INSERT INTO users (
     id,
     first_name,
@@ -17,8 +17,7 @@ INSERT INTO users (
     $1, $2, $3, $4, $5,
     $6, $7, $8, $9, $10,
     $11, $12, $13
-)
-RETURNING id, created_at, updated_at;
+);
 
 -- name: CheckEmailExists :one
 SELECT EXISTS(
