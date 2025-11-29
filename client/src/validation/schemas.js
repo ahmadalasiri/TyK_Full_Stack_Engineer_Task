@@ -16,10 +16,13 @@ export const personalInfoSchema = z.object({
     .string()
     .trim()
     .optional()
-    .refine(
-      (val) => !val || /^[\d\s\-\+\(\)]+$/.test(val),
-      "Please enter a valid phone number"
-    ),
+    .refine((val) => {
+      if (!val) return true; // Optional field
+      // Remove formatting characters (spaces, hyphens, parentheses, dots)
+      const cleaned = val.replace(/[\s\-().]/g, "");
+      // Validate: optional +, then 8-15 digits
+      return /^\+?[0-9]{8,15}$/.test(cleaned);
+    }, "Please enter a valid phone number (8-15 digits)"),
 });
 
 export const addressInfoSchema = z.object({
@@ -72,14 +75,3 @@ export const accountInfoSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
-
-export const validateEmailDomain = (email, country) => {
-  const countryDomainMap = {
-    "United Kingdom": [".uk", ".co.uk"],
-    UK: [".uk", ".co.uk"],
-  };
-
-  const expected = countryDomainMap[country];
-  if (!expected || !email) return true;
-  return expected.some((domain) => email.toLowerCase().includes(domain));
-};

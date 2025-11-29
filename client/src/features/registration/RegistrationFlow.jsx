@@ -1,4 +1,3 @@
-import React from "react";
 import { useRegistration } from "../../hooks/useRegistration.js";
 import { ProgressIndicator } from "./ProgressIndicator.jsx";
 import { StepPersonalInfo } from "./StepPersonalInfo.jsx";

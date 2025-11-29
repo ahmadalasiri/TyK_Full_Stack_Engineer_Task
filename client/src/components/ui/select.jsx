@@ -3,12 +3,19 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "../../lib/utils.js";
 
+/**
+ * Select - Main wrapper that manages select state (open/closed, selected value)
+ */
 const Select = SelectPrimitive.Root;
 
-const SelectGroup = SelectPrimitive.Group;
-
+/**
+ * SelectValue - Displays the selected value or placeholder
+ */
 const SelectValue = SelectPrimitive.Value;
 
+/**
+ * SelectTrigger - Clickable button that opens/closes the dropdown
+ */
 const SelectTrigger = React.forwardRef(
   ({ className, children, ...props }, ref) => (
     <SelectPrimitive.Trigger
@@ -28,6 +35,9 @@ const SelectTrigger = React.forwardRef(
 );
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
+/**
+ * SelectScrollUpButton - Scroll button for long lists (appears at top when needed)
+ */
 const SelectScrollUpButton = React.forwardRef(
   ({ className, ...props }, ref) => (
     <SelectPrimitive.ScrollUpButton
@@ -44,6 +54,9 @@ const SelectScrollUpButton = React.forwardRef(
 );
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
 
+/**
+ * SelectScrollDownButton - Scroll button for long lists (appears at bottom when needed)
+ */
 const SelectScrollDownButton = React.forwardRef(
   ({ className, ...props }, ref) => (
     <SelectPrimitive.ScrollDownButton
@@ -61,6 +74,9 @@ const SelectScrollDownButton = React.forwardRef(
 SelectScrollDownButton.displayName =
   SelectPrimitive.ScrollDownButton.displayName;
 
+/**
+ * SelectContent - Dropdown menu (uses Portal to avoid z-index issues, includes animations)
+ */
 const SelectContent = React.forwardRef(
   ({ className, children, position = "popper", ...props }, ref) => (
     <SelectPrimitive.Portal>
@@ -92,15 +108,9 @@ const SelectContent = React.forwardRef(
 );
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 
-const SelectLabel = React.forwardRef(({ className, ...props }, ref) => (
-  <SelectPrimitive.Label
-    ref={ref}
-    className={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)}
-    {...props}
-  />
-));
-SelectLabel.displayName = SelectPrimitive.Label.displayName;
-
+/**
+ * SelectItem - Single option in the dropdown (shows checkmark when selected)
+ */
 const SelectItem = React.forwardRef(
   ({ className, children, ...props }, ref) => (
     <SelectPrimitive.Item
@@ -116,35 +126,10 @@ const SelectItem = React.forwardRef(
           <Check className="h-4 w-4" />
         </SelectPrimitive.ItemIndicator>
       </span>
-
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
   )
 );
 SelectItem.displayName = SelectPrimitive.Item.displayName;
 
-const SelectSeparator = React.forwardRef(({ className, ...props }, ref) => (
-  <SelectPrimitive.Separator
-    ref={ref}
-    className={cn("-mx-1 my-1 h-px bg-muted", className)}
-    {...props}
-  />
-));
-SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
-
-export {
-  Select,
-  SelectGroup,
-  SelectValue,
-  SelectTrigger,
-  SelectContent,
-  SelectLabel,
-  SelectItem,
-  SelectSeparator,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
-};
-
-
-
-
+export { Select, SelectValue, SelectTrigger, SelectContent, SelectItem };

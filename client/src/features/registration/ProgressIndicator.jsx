@@ -1,4 +1,4 @@
-import React from "react";
+import { Fragment } from "react/jsx-runtime";
 import { Check } from "lucide-react";
 import { useRegistration } from "../../hooks/useRegistration.js";
 import { cn } from "../../lib/utils.js";
@@ -25,11 +25,13 @@ export function ProgressIndicator() {
       <div className="flex items-center justify-between">
         {steps.map((step, index) => {
           const isActive = currentStep === step.number;
-          const isCompleted = completedSteps.has(step.number) || currentStep > step.number;
-          const isClickable = step.number <= currentStep || completedSteps.has(step.number - 1);
+          const isCompleted =
+            completedSteps.has(step.number) || currentStep > step.number;
+          const isClickable =
+            step.number <= currentStep || completedSteps.has(step.number - 1);
 
           return (
-            <React.Fragment key={step.number}>
+            <Fragment key={step.number}>
               <div className="flex flex-col items-center flex-1">
                 <button
                   onClick={() => handleStepClick(step.number)}
@@ -37,10 +39,17 @@ export function ProgressIndicator() {
                   className={cn(
                     "w-12 h-12 rounded-full flex items-center justify-center font-semibold text-sm",
                     "transition-all duration-300 transform",
-                    isActive && "bg-primary text-primary-foreground scale-110 shadow-lg",
-                    isCompleted && !isActive && "bg-success text-success-foreground",
-                    !isActive && !isCompleted && "bg-secondary text-secondary-foreground",
-                    isClickable && !isActive && "hover:scale-105 cursor-pointer",
+                    isActive &&
+                      "bg-primary text-primary-foreground scale-110 shadow-lg",
+                    isCompleted &&
+                      !isActive &&
+                      "bg-success text-success-foreground",
+                    !isActive &&
+                      !isCompleted &&
+                      "bg-secondary text-secondary-foreground",
+                    isClickable &&
+                      !isActive &&
+                      "hover:scale-105 cursor-pointer",
                     !isClickable && "cursor-not-allowed opacity-50"
                   )}
                 >
@@ -70,12 +79,10 @@ export function ProgressIndicator() {
                   />
                 </div>
               )}
-            </React.Fragment>
+            </Fragment>
           );
         })}
       </div>
     </div>
   );
 }
-
-

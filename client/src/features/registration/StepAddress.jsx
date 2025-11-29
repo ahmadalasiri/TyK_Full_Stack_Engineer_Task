@@ -1,5 +1,5 @@
-import React, { useMemo, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useMemo, useEffect } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addressInfoSchema } from "../../validation/schemas.js";
 import { useRegistration } from "../../hooks/useRegistration.js";
@@ -27,8 +27,6 @@ export function StepAddress() {
   } = useRegistration();
   const { stepError, handleFormChange } = useStepError(2);
 
-  const [selectedCountryCode, setSelectedCountryCode] = useState("");
-
   // Get all countries from country-state-city
   const countries = useMemo(() => {
     return Country.getAllCountries().reduce((acc, country) => {
@@ -43,16 +41,10 @@ export function StepAddress() {
     }, []);
   }, []);
 
-  // Get states for selected country using country-state-city
-  const states = useMemo(() => {
-    if (!selectedCountryCode) return [];
-    return State.getStatesOfCountry(selectedCountryCode);
-  }, [selectedCountryCode]);
-
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     setValue,
     formState: { errors, isValid },
   } = useForm({
@@ -68,13 +60,9 @@ export function StepAddress() {
       );
       if (countryData) {
         const countryCode = countryData.isoCode;
-        setSelectedCountryCode(countryCode);
-        // Set countryIso in form if not already set
-        if (!registrationData.address.countryIso) {
-          setValue("countryIso", countryCode, {
-            shouldValidate: false,
-          });
-        }
+        setValue("countryIso", countryCode, {
+          shouldValidate: false,
+        });
       }
     }
   }, [
@@ -84,7 +72,21 @@ export function StepAddress() {
     setValue,
   ]);
 
-  const country = watch("country") || registrationData.address.country;
+  const country = useWatch({ control, name: "country" });
+  const state = useWatch({ control, name: "state" });
+
+  // Derive country code from selected country
+  const selectedCountryCode = useMemo(() => {
+    if (!country) return "";
+    const countryData = countries.find((c) => c.name === country);
+    return countryData?.isoCode || "";
+  }, [country, countries]);
+
+  // Get states for selected country using country-state-city
+  const states = useMemo(() => {
+    if (!selectedCountryCode) return [];
+    return State.getStatesOfCountry(selectedCountryCode);
+  }, [selectedCountryCode]);
 
   const onSubmit = (data) => {
     // Ensure countryIso is set if country is selected
@@ -166,7 +168,6 @@ export function StepAddress() {
                 setValue("countryIso", countryCode, {
                   shouldValidate: false,
                 });
-                setSelectedCountryCode(countryCode);
                 setValue("state", "", { shouldValidate: true });
               }}
             >
@@ -195,7 +196,7 @@ export function StepAddress() {
               State/Province <span className="text-destructive">*</span>
             </Label>
             <Select
-              value={watch("state")}
+              value={state}
               onValueChange={(value) => {
                 setValue("state", value, { shouldValidate: true });
               }}
