@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { accountInfoSchema } from "../../validation/schemas.js";
@@ -33,6 +33,9 @@ export function StepAccount() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(null);
+  const lastCheckedUsernameRef = useRef(
+    registrationData.account.username || null
+  );
 
   const {
     register,
@@ -68,11 +71,18 @@ export function StepAccount() {
   };
 
   useEffect(() => {
+    // Skip if username hasn't changed from last check (prevent unnecessary API calls)
+    if (username === lastCheckedUsernameRef.current) {
+      return;
+    }
+
     const timeoutId = setTimeout(() => {
       if (username && username.length >= 6) {
+        lastCheckedUsernameRef.current = username;
         checkUsernameAvailabilityDebounced(username);
       } else {
         setUsernameAvailable(null);
+        lastCheckedUsernameRef.current = username || null;
       }
     }, 500);
 

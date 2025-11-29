@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRegistration } from "../../hooks/useRegistration.js";
 import { registerUser } from "../../api/registration.js";
 import { Button } from "../../components/ui/button.jsx";
@@ -61,6 +61,7 @@ export function StepReview() {
   const groupErrorsByStep = (backendFieldErrors) => {
     const stepErrors = {};
 
+    // Map backend field names to frontend field names and group errors by step number { first_name: "First name is required" } => { 1: ["First name is required"] }
     Object.entries(backendFieldErrors).forEach(([backendField, message]) => {
       const frontendField = fieldNameMap[backendField] || backendField;
       const stepNumber = getStepForField(frontendField);
@@ -70,16 +71,8 @@ export function StepReview() {
       }
       stepErrors[stepNumber].push(message);
     });
-
-    // Convert arrays to single strings (or keep as arrays for multiple errors)
-    const stepErrorsFormatted = {};
-    Object.entries(stepErrors).forEach(([step, messages]) => {
-      const stepNum = parseInt(step, 10);
-      stepErrorsFormatted[stepNum] =
-        messages.length === 1 ? messages[0] : messages; // Keep as array if multiple errors
-    });
-
-    return stepErrorsFormatted;
+ 
+    return stepErrors;
   };
 
   const handleSubmit = async () => {
@@ -110,7 +103,7 @@ export function StepReview() {
       // Reset form after 2 seconds
       setTimeout(() => {
         resetForm();
-      }, 2000);
+      }, 3000);
     } catch (err) {
       console.error("Registration error:", err);
 
