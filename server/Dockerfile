@@ -27,7 +27,7 @@ WORKDIR /app
 COPY --from=backend-builder /app/server ./server/bin/
 COPY --from=frontend-builder /build/client/dist ./client/dist
 
-EXPOSE 8080
+EXPOSE 3001
 
 WORKDIR /app/server
 

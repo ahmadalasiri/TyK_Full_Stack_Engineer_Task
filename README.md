@@ -83,7 +83,7 @@ sqlc generate
 
 Configure environment (either via real env vars or a local `.env` file in `server/`):
 
-- `SERVER_PORT=8080`
+- `SERVER_PORT=3001`
 - `DATABASE_URL=postgres://postgres:password@localhost:5432/tyk_registration?sslmode=disable`
 
 **Note:** Database migrations run automatically on server startup using `golang-migrate`. No manual migration step needed!
@@ -99,7 +99,7 @@ Configure environment (either via real env vars or a local `.env` file in `serve
 From `server/`:
 
 ```bash
-export SERVER_PORT=8080
+export SERVER_PORT=3001
 export DATABASE_URL=postgres://tyk_user:tyk_password@localhost:5432/tyk_registration?sslmode=disable
 go run ./cmd/api
 ```
@@ -128,7 +128,7 @@ Air will watch for changes in `.go` files and automatically rebuild and restart 
 - **Fresh**: `go install github.com/gravityblast/fresh@latest` then `fresh`
 - **CompileDaemon**: `go install github.com/githubnemo/CompileDaemon@latest` then `CompileDaemon -command="./bin/server"`
 
-The API will listen on `http://localhost:8080`.
+The API will listen on `http://localhost:3001`.
 
 ### Frontend (Vite + React)
 
@@ -138,7 +138,7 @@ From `client/`:
 npm run dev
 ```
 
-By default Vite runs on `http://localhost:5173` and proxies `/api` to `http://localhost:8080`, so the client can call the backend without additional config.
+By default Vite runs on `http://localhost:5173` and proxies `/api` to `http://localhost:3001`, so the client can call the backend without additional config.
 
 ---
 
@@ -155,7 +155,7 @@ This will:
 - Start a PostgreSQL 16-alpine container with the `tyk_registration` DB and apply migrations automatically from `server/internal/db/migrations`.
 - Build and run the Go Fiber server image (`server/Dockerfile`).
 
-The API will be available on `http://localhost:8080`.
+The API will be available on `http://localhost:3001`.
 
 > Note: The PostgreSQL port is only exposed inside the Docker network by default. Uncomment the `ports` block in `docker-compose.yml` if you need direct host access.
 

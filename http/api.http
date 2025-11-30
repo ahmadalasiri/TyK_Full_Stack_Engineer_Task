@@ -2,7 +2,7 @@
 ### Use with VS Code REST Client extension or similar tools
 ### Base URL - Update this variable or replace in each request
 
-@baseUrl = http://localhost:8080
+@baseUrl = http://localhost:3001
 @contentType = application/json
 
 ### Variables for testing

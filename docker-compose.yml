@@ -1,6 +1,6 @@
 # Environment Variables:
 # Create a .env file in the root directory with the following variables (or set them in your environment):
-#   SERVER_PORT=8080
+#   SERVER_PORT=3001
 #   POSTGRES_USER=tyk_user
 #   POSTGRES_PASSWORD=tyk_password
 #   POSTGRES_DB=tyk_registration
@@ -28,10 +28,10 @@ services:
       dockerfile: server/Dockerfile
     container_name: tyk-server
     environment:
-      SERVER_PORT: ${SERVER_PORT:-8080}
+      SERVER_PORT: ${SERVER_PORT:-3001}
       DATABASE_URL: postgres://${POSTGRES_USER:-tyk_user}:${POSTGRES_PASSWORD:-tyk_password}@postgres:5432/${POSTGRES_DB:-tyk_registration}?sslmode=disable
     ports:
-      - "${SERVER_PORT:-8080}:8080"
+      - "${SERVER_PORT:-3001}:3001"
     depends_on:
       - postgres
     networks:

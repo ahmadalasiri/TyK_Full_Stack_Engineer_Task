@@ -15,7 +15,7 @@ func Load() (*Config, error) {
 	_ = godotenv.Load()
 
 	cfg := &Config{
-		Port: getEnv("SERVER_PORT", "8080"),
+		Port: getEnv("SERVER_PORT", "3001"),
 		DSN:  getEnv("DATABASE_URL"),
 	}
 	return cfg, nil
