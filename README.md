@@ -14,6 +14,14 @@ A full-stack multi-step user registration application built with React and Go. T
 - **PostgreSQL Integration** - Type-safe queries with sqlc
 - **Docker Support** - One-command deployment with Docker Compose
 
+## 🛠️ Tech Stack
+
+**Frontend:** React 19 • Vite • TailwindCSS • React Hook Form • Zod
+
+**Backend:** Go 1.24+ • Fiber • PostgreSQL • sqlc • bcrypt • golang-migrate
+
+**DevOps:** Docker • Docker Compose
+
 ## 📋 Prerequisites
 
 - **Node.js** (LTS) and npm
@@ -70,24 +78,6 @@ cd server && go test ./tests/...
 # Frontend tests
 cd client && npm test
 ```
-
-## 🏗️ Architecture
-
-### Frontend
-
-- **React 19** with Vite for fast development
-- **React Hook Form + Zod** for form management and validation
-- **TailwindCSS** for styling
-- **React Context** for state management
-- **Axios** for API communication
-
-### Backend
-
-- **Go Fiber** web framework
-- **PostgreSQL** database with **sqlc** for type-safe queries
-- **Middleware Chain** pattern for validation (field-level, cross-field, business logic)
-- **bcrypt** for password hashing
-- **golang-migrate** for database migrations
 
 ### Project Structure
 
@@ -188,11 +178,3 @@ cd server && sqlc generate
 ## 📚 Documentation
 
 For detailed requirements and specifications, see [`TyK_Full_Stack_Engineer_Task.md`](./TyK_Full_Stack_Engineer_Task.md).
-
-## 🛠️ Tech Stack
-
-**Frontend:** React 19 • Vite • TailwindCSS • React Hook Form • Zod • Axios
-
-**Backend:** Go 1.24+ • Fiber • PostgreSQL • sqlc • bcrypt • golang-migrate
-
-**DevOps:** Docker • Docker Compose
