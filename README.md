@@ -177,4 +177,6 @@ cd server && sqlc generate
 
 ## 📚 Documentation
 
-For detailed requirements and specifications, see [`TyK_Full_Stack_Engineer_Task.md`](./TyK_Full_Stack_Engineer_Task.md).
+- **Project Requirements**: [`TyK_Full_Stack_Engineer_Task.md`](./TyK_Full_Stack_Engineer_Task.md) - Detailed requirements and specifications
+- **Frontend Documentation**: [`client/README.md`](./client/README.md) - React frontend setup, structure, and development guide
+- **Backend Documentation**: [`server/README.md`](./server/README.md) - Go backend architecture, API endpoints, and development guide
