@@ -177,6 +177,14 @@ cd server && sqlc generate
 - **Domain Management:** Cloudflare
 - **Domain:** api.adam.ahmadalasiri.info (Got a bit lazy to create a new subdomain 🙂)
 
+## 🚀 Future Enhancements
+
+- **Frontend Email Domain Validation** - Add client-side validation for email domain matching (e.g., UK email domain check)
+- **Enhanced Dropdown UI** - Improve country/state dropdown with better visual design
+- **Increased Test Coverage** - Expand unit and integration test coverage for better reliability
+- **E2E Testing** - Add end-to-end tests using tools like Playwright or Cypress
+- **TypeScript Migration** - Migrate frontend from JavaScript to TypeScript for better type safety and developer experience
+
 ## 📚 Documentation
 
 For detailed requirements and specifications, see [`TyK_Full_Stack_Engineer_Task.md`](./TyK_Full_Stack_Engineer_Task.md).
