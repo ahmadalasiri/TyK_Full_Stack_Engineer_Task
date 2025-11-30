@@ -1,0 +1,74 @@
+# Environment Variables:
+# Create a .env file in the root directory with the following variables (or set them in your environment):
+#   SERVER_PORT=8080
+#   POSTGRES_USER=tyk_user
+#   POSTGRES_PASSWORD=tyk_password
+#   POSTGRES_DB=tyk_registration
+#   POSTGRES_PORT=5432
+#   DATABASE_URL=postgres://tyk_user:tyk_password@postgres:5432/tyk_registration?sslmode=disable
+#   VITE_API_BASE_URL=http://localhost:8080 (optional, for frontend dev mode)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: tyk-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-tyk_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tyk_password}
+      POSTGRES_DB: ${POSTGRES_DB:-tyk_registration}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-tyk_user} -d ${POSTGRES_DB:-tyk_registration}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tyk-network
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: tyk-server
+    environment:
+      SERVER_PORT: ${SERVER_PORT:-8080}
+      DATABASE_URL: postgres://${POSTGRES_USER:-tyk_user}:${POSTGRES_PASSWORD:-tyk_password}@postgres:5432/${POSTGRES_DB:-tyk_registration}?sslmode=disable
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - tyk-network
+    restart: unless-stopped
+
+  # Optional: Frontend dev service for development with hot reload
+  # Uncomment to run frontend separately in development mode
+  # client-dev:
+  #   build:
+  #     context: ./client
+  #     dockerfile: Dockerfile.dev
+  #   container_name: tyk-client-dev
+  #   ports:
+  #     - "5173:5173"
+  #   environment:
+  #     VITE_API_BASE_URL: http://localhost:8080
+  #   volumes:
+  #     - ./client/src:/app/src
+  #     - ./client/public:/app/public
+  #   networks:
+  #     - tyk-network
+
+volumes:
+  postgres_data:
+
+networks:
+  tyk-network:
+    driver: bridge

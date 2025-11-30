@@ -1,0 +1,38 @@
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+README*
+
+# Environment files (these should be set in docker-compose or .env)
+.env
+.env.local
+.env.*.local
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test directories
+z_test/
+
+# Node modules (will be installed in containers)
+**/node_modules/
+
+# Build artifacts
+**/dist/
+**/bin/
+**/tmp/
+**/*.exe
+
+# Logs
+*.log
+

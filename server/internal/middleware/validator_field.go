@@ -19,7 +19,7 @@ func FieldValidator() fiber.Handler {
 
 		fields := map[string]string{}
 
-		if strings.TrimSpace(req.FirstName) != "" {
+		if strings.TrimSpace(req.FirstName) == "" {
 			fields["first_name"] = "First name is required"
 		}
 		if strings.TrimSpace(req.LastName) == "" {
