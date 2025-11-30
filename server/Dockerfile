@@ -11,11 +11,17 @@ RUN npm run build
 # Backend build stage
 FROM golang:1.24-alpine AS backend-builder
 
+# Install sqlc and ensure it's in PATH
+RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+ENV PATH="${PATH}:/root/go/bin"
+
 WORKDIR /build
 
 COPY server/go.mod server/go.sum ./
 RUN go mod download
 COPY server/ ./
+# Generate sqlc code before building
+RUN sqlc generate
 RUN go build -o /app/server ./cmd/api
 
 # Runtime stage
