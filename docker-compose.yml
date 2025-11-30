@@ -6,7 +6,6 @@
 #   POSTGRES_DB=tyk_registration
 #   POSTGRES_PORT=5432
 #   DATABASE_URL=postgres://tyk_user:tyk_password@postgres:5432/tyk_registration?sslmode=disable
-#   VITE_API_BASE_URL=http://localhost:8080 (optional, for frontend dev mode)
 
 services:
   postgres:
@@ -20,15 +19,6 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U ${POSTGRES_USER:-tyk_user} -d ${POSTGRES_DB:-tyk_registration}",
-        ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
     networks:
       - tyk-network
 
@@ -43,32 +33,12 @@ services:
     ports:
       - "${SERVER_PORT:-8080}:8080"
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     networks:
       - tyk-network
-    restart: unless-stopped
-
-  # Optional: Frontend dev service for development with hot reload
-  # Uncomment to run frontend separately in development mode
-  # client-dev:
-  #   build:
-  #     context: ./client
-  #     dockerfile: Dockerfile.dev
-  #   container_name: tyk-client-dev
-  #   ports:
-  #     - "5173:5173"
-  #   environment:
-  #     VITE_API_BASE_URL: http://localhost:8080
-  #   volumes:
-  #     - ./client/src:/app/src
-  #     - ./client/public:/app/public
-  #   networks:
-  #     - tyk-network
 
 volumes:
   postgres_data:
 
 networks:
   tyk-network:
-    driver: bridge
