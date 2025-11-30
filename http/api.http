@@ -1,38 +1,34 @@
-### TyK Registration API - HTTP Request Collection
+### TyK Registration API
 ### Use with VS Code REST Client extension or similar tools
-### Base URL - Update this variable or replace in each request
 
 @baseUrl = http://localhost:3001
 @contentType = application/json
 
-### Variables for testing
-@testEmail = test@example.com
-@testUsername = testuser123
-@testPassword = TestPass123!
+##################################################
+# Health Checks
+##################################################
 
-###
-
-### Health Check
 GET {{baseUrl}}/health
 
 ###
 
-### Readiness Check (requires DB connection)
 GET {{baseUrl}}/ready
 
+##################################################
+# Username Availability
+##################################################
+
+GET {{baseUrl}}/api/username-availability?username=testuser123
+
 ###
 
-### Check Username Availability - Available
-GET {{baseUrl}}/api/username-availability?username={{testUsername}}
-
-###
-
-### Check Username Availability - Taken (after registration)
 GET {{baseUrl}}/api/username-availability?username=existinguser
 
-###
+##################################################
+# Registration - Success Cases
+##################################################
 
-### Register New User - Complete Registration
+### Complete Registration (All Fields)
 POST {{baseUrl}}/api/register
 Content-Type: {{contentType}}
 
@@ -54,7 +50,7 @@ Content-Type: {{contentType}}
 
 ###
 
-### Register New User - Without Phone (Optional Field)
+### Registration Without Phone (Optional Field)
 POST {{baseUrl}}/api/register
 Content-Type: {{contentType}}
 
@@ -76,7 +72,7 @@ Content-Type: {{contentType}}
 
 ###
 
-### Register New User - UK Country (Bonus: Email must contain .uk)
+### UK Registration (Email must contain .uk)
 POST {{baseUrl}}/api/register
 Content-Type: {{contentType}}
 
@@ -96,9 +92,11 @@ Content-Type: {{contentType}}
   "newsletter": true
 }
 
-###
+##################################################
+# Registration - Error Cases
+##################################################
 
-### Register New User - Validation Error Example (Missing Required Fields)
+### Field Validation Errors
 POST {{baseUrl}}/api/register
 Content-Type: {{contentType}}
 
@@ -114,49 +112,7 @@ Content-Type: {{contentType}}
 
 ###
 
-### Register New User - Business Error Example (Duplicate Email)
-POST {{baseUrl}}/api/register
-Content-Type: {{contentType}}
-
-{
-  "first_name": "Duplicate",
-  "last_name": "User",
-  "email": "john.doe@example.com",
-  "street": "999 Test Street",
-  "city": "Test City",
-  "state": "Test State",
-  "country": "United States",
-  "username": "duplicateuser",
-  "password": "TestPass123!",
-  "confirm_password": "TestPass123!",
-  "terms_accepted": true,
-  "newsletter": false
-}
-
-###
-
-### Register New User - Business Error Example (Duplicate Username)
-POST {{baseUrl}}/api/register
-Content-Type: {{contentType}}
-
-{
-  "first_name": "Another",
-  "last_name": "User",
-  "email": "another@example.com",
-  "street": "888 Test Avenue",
-  "city": "Test City",
-  "state": "Test State",
-  "country": "United States",
-  "username": "johndoe123",
-  "password": "TestPass123!",
-  "confirm_password": "TestPass123!",
-  "terms_accepted": true,
-  "newsletter": false
-}
-
-###
-
-### Register New User - Cross-Field Validation Error (Password Mismatch)
+### Password Mismatch (Cross-Field Validation)
 POST {{baseUrl}}/api/register
 Content-Type: {{contentType}}
 
@@ -177,7 +133,7 @@ Content-Type: {{contentType}}
 
 ###
 
-### Register New User - UK Email Domain Validation Error
+### UK Email Domain Validation Error
 POST {{baseUrl}}/api/register
 Content-Type: {{contentType}}
 
@@ -196,3 +152,44 @@ Content-Type: {{contentType}}
   "newsletter": false
 }
 
+###
+
+### Duplicate Email (Business Error)
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "first_name": "Duplicate",
+  "last_name": "User",
+  "email": "john.doe@example.com",
+  "street": "999 Test Street",
+  "city": "Test City",
+  "state": "Test State",
+  "country": "United States",
+  "username": "duplicateuser",
+  "password": "TestPass123!",
+  "confirm_password": "TestPass123!",
+  "terms_accepted": true,
+  "newsletter": false
+}
+
+###
+
+### Duplicate Username (Business Error)
+POST {{baseUrl}}/api/register
+Content-Type: {{contentType}}
+
+{
+  "first_name": "Another",
+  "last_name": "User",
+  "email": "another@example.com",
+  "street": "888 Test Avenue",
+  "city": "Test City",
+  "state": "Test State",
+  "country": "United States",
+  "username": "johndoe123",
+  "password": "TestPass123!",
+  "confirm_password": "TestPass123!",
+  "terms_accepted": true,
+  "newsletter": false
+}

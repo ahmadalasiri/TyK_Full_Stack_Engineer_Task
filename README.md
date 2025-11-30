@@ -165,7 +165,7 @@ cd server && sqlc generate
 - **SSL/TLS:** Let's Encrypt (certbot)
 - **Containerization:** Docker Compose
 - **Domain Management:** Cloudflare
-- **Domain:** api.adam.ahmadalasiri.info (Got a bit lazy to create a new subdomain 🙂)
+- **Domain:** api.adam.ahmadalasiri.info (Got a bit lazy to configure a new subdomain 🙂)
 
 ## 🚀 Future Enhancements
 
