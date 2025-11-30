@@ -103,6 +103,9 @@ cd client && npm test
 │   │   └── db/            # Database setup & migrations
 │   └── go.mod
 │
+├── http/                   # API testing requests
+│   └── api.http           # HTTP request collection
+│
 └── docker-compose.yml      # Docker setup
 ```
 
@@ -132,6 +135,8 @@ cd client && npm test
 - `GET /api/username-availability?username=...` - Check username availability
 - `GET /health` - Health check
 - `GET /ready` - Readiness check (database connectivity)
+
+**API Testing:** Use [`http/api.http`](./http/api.http) with VS Code REST Client extension or similar tools to test all endpoints with pre-configured requests.
 
 ## 🔧 Development
 
@@ -180,3 +185,4 @@ cd server && sqlc generate
 - **Project Requirements**: [`TyK_Full_Stack_Engineer_Task.md`](./TyK_Full_Stack_Engineer_Task.md) - Detailed requirements and specifications
 - **Frontend Documentation**: [`client/README.md`](./client/README.md) - React frontend setup, structure, and development guide
 - **Backend Documentation**: [`server/README.md`](./server/README.md) - Go backend architecture, API endpoints, and development guide
+- **API Testing**: [`http/api.http`](./http/api.http) - HTTP request collection for testing all API endpoints
