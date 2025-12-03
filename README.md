@@ -172,13 +172,26 @@ cd server && sqlc generate
 - **Domain Management:** Cloudflare
 - **Domain:** api.adam.ahmadalasiri.info (Got a bit lazy to configure a new subdomain 🙂)
 
-## 🚀 Future Enhancements
+## 📝 TODO
 
-- **Frontend Email Domain Validation** - Add client-side validation for email domain matching (e.g., UK email domain check)
-- **Enhanced Dropdown UI** - Improve country/state dropdown with better visual design
-- **Increased Test Coverage** - Expand unit and integration test coverage for better reliability
-- **E2E Testing** - Add end-to-end tests using tools like Playwright or Cypress
-- **TypeScript Migration** - Migrate frontend from JavaScript to TypeScript for better type safety and developer experience
+### Security Enhancements
+
+- [ ] **Security Headers Middleware** - Implement Helmet.js-like security headers (X-Frame-Options, CSP, etc.)
+- [ ] **Rate Limiting** - Add rate limiting to prevent brute force attacks and DoS
+- [ ] **CORS Configuration** - Configure proper CORS with allowed origins
+- [ ] **Request Body Size Limits** - Add limits to prevent DoS via large payloads
+- [ ] **HTTPS/HSTS** - Enable HSTS headers in production
+- [ ] **Input Sanitization** - Add HTML sanitization for user inputs
+- [ ] **Username Enumeration Protection** - Add CAPTCHA or delays to username availability endpoint
+
+### Feature Enhancements
+
+- [ ] **Frontend Email Domain Validation** - Add client-side validation for email domain matching
+- [ ] **Email and Country in Same Step** - Move email field to the same step as country selection to make domain validation more intuitive and provide immediate feedback when email domain must match country domain
+- [ ] **Enhanced Dropdown UI** - Improve country/state dropdown with better visual design
+- [ ] **Increased Test Coverage** - Expand unit and integration test coverage for better reliability
+- [ ] **E2E Testing** - Add end-to-end tests using tools like Playwright or Cypress
+- [ ] **TypeScript Migration** - Migrate frontend from JavaScript to TypeScript for better type safety and developer experience
 
 ## 📚 Documentation
 
