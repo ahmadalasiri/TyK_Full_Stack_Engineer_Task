@@ -186,8 +186,10 @@ cd server && sqlc generate
 
 ### Feature Enhancements
 
+- [ ] **API Versioning** - Implement API versioning (e.g., `/api/v1/register`) to support future API changes without breaking existing clients
 - [ ] **Frontend Email Domain Validation** - Add client-side validation for email domain matching
 - [ ] **Email and Country in Same Step** - Move email field to the same step as country selection to make domain validation more intuitive and provide immediate feedback when email domain must match country domain
+- [ ] **Auto-Update Country from Phone Number** - Automatically update the country field when user selects a phone number country code to improve UX and reduce manual input
 - [ ] **Enhanced Dropdown UI** - Improve country/state dropdown with better visual design
 - [ ] **Increased Test Coverage** - Expand unit and integration test coverage for better reliability
 - [ ] **E2E Testing** - Add end-to-end tests using tools like Playwright or Cypress
